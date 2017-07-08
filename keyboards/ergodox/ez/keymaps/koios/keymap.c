@@ -3,9 +3,13 @@
 #include "action_layer.h"
 #include "version.h"
 
-#define BASE 0 // default layer
-#define SYMB 1 // symbols
-#define MDIA 2 // media keys
+enum layer
+{
+  LAYER_BASE,  // default layer
+  LAYER_SYMB,  // symbols
+  LAYER_MDIA,  // media keys
+  LAYER_PLAIN
+};
 
 enum custom_keycodes {
   PLACEHOLDER = SAFE_RANGE, // can always be here
@@ -17,13 +21,13 @@ enum custom_keycodes {
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 // If it accepts an argument (i.e, is a function), it doesn't need KC_.
 // Otherwise, it needs KC_*
-[BASE] = KEYMAP(  // layer 0 : default
+[LAYER_BASE] = KEYMAP(  // layer 0 : default
   // left hand
-  KC_EQL,          KC_1,         KC_2,          KC_3,    KC_4,    KC_5,   KC_LEFT,
-  KC_DELT,         KC_Q,         KC_W,          KC_E,    KC_R,    KC_T,   TG(SYMB),
-  KC_BSPC,         KC_A,         KC_S,          KC_D,    KC_F,    KC_G,
-  KC_LSFT,         LCTL_T(KC_Z), KC_X,          KC_C,    KC_V,    KC_B,   ALL_T(KC_NO),
-  LT(SYMB,KC_GRV), KC_QUOT,      LALT(KC_LSFT), KC_LEFT, KC_RGHT,
+  KC_EQL,                KC_1,         KC_2,          KC_3,    KC_4,    KC_5,   KC_LEFT,
+  KC_DELT,               KC_Q,         KC_W,          KC_E,    KC_R,    KC_T,   TG(LAYER_SYMB),
+  KC_BSPC,               KC_A,         KC_S,          KC_D,    KC_F,    KC_G,
+  KC_LSFT,               LCTL_T(KC_Z), KC_X,          KC_C,    KC_V,    KC_B,   ALL_T(KC_NO),
+  LT(LAYER_SYMB,KC_GRV), KC_QUOT,      LALT(KC_LSFT), KC_LEFT, KC_RGHT,
 
                                                                LALT_T(KC_APP), KC_LGUI,
                                                                                KC_HOME,
@@ -31,11 +35,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 
   // right hand
-  KC_RGHT,      KC_6,   KC_7,    KC_8,    KC_9,    KC_0,             KC_MINS,
-  TG(SYMB),     KC_Y,   KC_U,    KC_I,    KC_O,    KC_P,             KC_BSLS,
-                KC_H,   KC_J,    KC_K,    KC_L,    LT(MDIA, KC_SCLN),GUI_T(KC_QUOT),
-  MEH_T(KC_NO), KC_N,   KC_M,    KC_COMM, KC_DOT,  RCTL_T(KC_SLSH),  KC_RSFT,
-                KC_UP,  KC_DOWN, KC_LBRC, KC_RBRC,          KC_FN1,
+  KC_RGHT,         KC_6,   KC_7,    KC_8,    KC_9,    KC_0,                   KC_MINS,
+  TG(LAYER_PLAIN), KC_Y,   KC_U,    KC_I,    KC_O,    KC_P,                   KC_BSLS,
+                   KC_H,   KC_J,    KC_K,    KC_L,    LT(LAYER_MDIA,KC_SCLN), GUI_T(KC_QUOT),
+  MEH_T(KC_NO),    KC_N,   KC_M,    KC_COMM, KC_DOT,  RCTL_T(KC_SLSH),        KC_RSFT,
+                   KC_UP,  KC_DOWN, KC_LBRC, KC_RBRC, KC_FN1,
 
   KC_RALT, CTL_T(KC_ESC),
   KC_PGUP,
@@ -64,7 +68,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                                 `--------------------'       `--------------------'
  */
 // SYMBOLS
-[SYMB] = KEYMAP(
+[LAYER_SYMB] = KEYMAP(
        // left hand
        VRSN,   KC_F1,  KC_F2,  KC_F3,  KC_F4,  KC_F5,  KC_TRNS,
        KC_TRNS,KC_EXLM,KC_AT,  KC_LCBR,KC_RCBR,KC_PIPE,KC_TRNS,
@@ -106,7 +110,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                                 `--------------------'       `--------------------'
  */
 // MEDIA AND MOUSE
-[MDIA] = KEYMAP(
+[LAYER_MDIA] = KEYMAP(
        KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
        KC_TRNS, KC_TRNS, KC_TRNS, KC_MS_U, KC_TRNS, KC_TRNS, KC_TRNS,
        KC_TRNS, KC_TRNS, KC_MS_L, KC_MS_D, KC_MS_R, KC_TRNS,
@@ -125,12 +129,34 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
        KC_TRNS,
        KC_TRNS, KC_TRNS, KC_WBAK
 ),
+
+[LAYER_PLAIN] = KEYMAP(
+  KC_GRV,   KC_1,    KC_2,    KC_3,    KC_4,    KC_5,   KC_6,
+  KC_TAB,   KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,   KC_INSERT,
+  KC_CAPS,  KC_A,    KC_S,    KC_D,    KC_F,    KC_G,
+  KC_LSFT,  KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,   KC_DELETE,
+  KC_LCTRL, KC_LGUI, KC_LALT, KC_LEFT, KC_RGHT,
+
+                                           KC_PGUP,     KC_PGDOWN,
+                                                        KC_F1,
+                                  KC_SPC,  KC_KP_ENTER, KC_F2,
+
+
+  KC_7,    KC_8, KC_9,  KC_0,     KC_MINUS, KC_EQUAL,  KC_BSPC,
+  KC_HOME, KC_Y, KC_U,  KC_I,     KC_O,     KC_P,      KC_BSLASH,
+           KC_H, KC_J,  KC_K,     KC_L,     KC_SCOLON, KC_ENTER,
+  KC_END,  KC_N, KC_M,  KC_COMMA, KC_DOT,   KC_SLASH,  KC_RSHIFT,
+                 KC_UP, KC_DOWN,  KC_RGUI,  KC_APP,    KC_RCTRL,
+
+  KC_LBRACKET, KC_RBRACKET,
+  KC_F3,
+  KC_F4,       KC_KP_MINUS, KC_KP_PLUS_
+)
 };
 
 const uint16_t PROGMEM fn_actions[] = {
-#error "Want to reset layers (disable all but the default ones)"
-    [0] = ACTION_LAYER_?????
-    [1] = ACTION_LAYER_TAP_TOGGLE(SYMB)                // FN1 - Momentary Layer 1 (Symbols)
+    [0] = ACTION_LAYER_SET_CLEAR(0)     // reset layers
+    [1] = ACTION_LAYER_TAP_TOGGLE(LAYER_SYMB)                // FN1 - Momentary Layer 1 (Symbols)
 };
 
 const macro_t *action_get_macro(keyrecord_t *record, uint8_t id, uint8_t opt)
@@ -151,29 +177,15 @@ const macro_t *action_get_macro(keyrecord_t *record, uint8_t id, uint8_t opt)
     return MACRO_NONE;
 };
 
+const uint16_t PROGMEM emulation_combo_keys[] = {
+  KC_INSERT, KC_DELETE, KC_HOME, KC_END
+};
+// NOTE: the combo is active on all layers!!
 const combo_t PROGMEM key_combos[] = {
-#error "What is COMBO_ACTION and COMBO_ALLOW_ACTION_KEYS?"
-  COMBO(keys, 16bitkeycode
+  [0] = COMBO(emulation_combo_keys, LAYER_ACTION_SET_CLEAR(0))
 };
 
-void process_combo_event(uint8_t combo_index, bool pressed) {
-
-}
-
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-  static uint8_t emulation_accord_state = 0;
-  for(uint8_t i = 0; i < ARR_COUNT(emulation_accord); ++i)
-  {
-    if(emulation_accord
-    set_key_bit(&emulation_accord_state, record.event.pressed, 
-  }
-  if(is_left_top(&record->event.key))
-    set_key_bit(&emulation_accord_state, record.event.pressed, 0b001);
-  if(is_right_top(&record->event.key) && record.event.pressed)
-    emulation_accord_state |= 0b001;
-#error "Check if top left, top right and some other key are pressed"
-#error "don't use keycode to determine that!"
-#error "if so, switch to emulation mode"
   switch (keycode) {
     // dynamically generate these.
     case EPRM:
@@ -217,11 +229,14 @@ void matrix_scan_user(void) {
     ergodox_right_led_3_off();
     switch (layer) {
       // TODO: Make this relevant to the ErgoDox EZ.
-        case 1:
+        case LAYER_SYMB:
             ergodox_right_led_1_on();
             break;
-        case 2:
+        case LAYER_MDIA:
             ergodox_right_led_2_on();
+            break;
+        case LAYER_PLAIN:
+            ergodox_right_led_3_on();
             break;
         default:
             // none
