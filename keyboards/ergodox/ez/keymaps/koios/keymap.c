@@ -3,6 +3,7 @@
 #include "action_layer.h"
 #include "version.h"
 
+
 enum layer
 {
   LAYER_BASE,  // default layer
@@ -155,7 +156,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 };
 
 const uint16_t PROGMEM fn_actions[] = {
-    [0] = ACTION_LAYER_SET_CLEAR(0)     // reset layers
+    [0] = ACTION_LAYER_SET_CLEAR(0),     // reset layers
     [1] = ACTION_LAYER_TAP_TOGGLE(LAYER_SYMB)                // FN1 - Momentary Layer 1 (Symbols)
 };
 
@@ -178,12 +179,17 @@ const macro_t *action_get_macro(keyrecord_t *record, uint8_t id, uint8_t opt)
 };
 
 const uint16_t PROGMEM emulation_combo_keys[] = {
-  KC_INSERT, KC_DELETE, KC_HOME, KC_END
+  KC_INSERT, KC_DELETE, KC_HOME, KC_END, COMBO_END
 };
 // NOTE: the combo is active on all layers!!
-const combo_t PROGMEM key_combos[] = {
-  [0] = COMBO(emulation_combo_keys, LAYER_ACTION_SET_CLEAR(0))
+combo_t key_combos[COMBO_COUNT] = {
+  [0] = COMBO_ACTION(emulation_combo_keys)//, TO(LAYER_BASE))
 };
+
+void process_combo_event(uint8_t combo_index, bool pressed) {
+  if(combo_index == 0 && pressed)
+    layer_state = default_layer_state;
+}
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
