@@ -4,15 +4,6 @@
 #include "version.h"
 
 
-#ifndef PERMISSIVE_HOLD
-#  error "Needs permissive hold"
-#endif
-
-#ifndef COMBO_ENABLE
-#  error "Needs combo support"
-#endif
-
-
 enum layer
 {
   LAYER_BASE,  // default layer

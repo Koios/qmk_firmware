@@ -6,6 +6,9 @@
 
 #define PERMISSIVE_HOLD 1
 
+#ifndef COMBO_ENABLE
+#  error "Needs combo support"
+#endif
 #define COMBO_COUNT 1
 
 
