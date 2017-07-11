@@ -20,8 +20,7 @@ enum custom_keycodes {
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-// If it accepts an argument (i.e, is a function), it doesn't need KC_.
-// Otherwise, it needs KC_*
+
 [LAYER_BASE] = KEYMAP(  // layer 0 : default
   // left hand
   KC_EQL,                KC_1,         KC_2,          KC_3,    KC_4,    KC_5,   KC_LEFT,
@@ -46,48 +45,34 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   KC_PGUP,
   KC_PGDN, KC_TAB,        KC_ENT
 
-    ),
-/* Keymap 1: Symbol Layer
- *
- * ,---------------------------------------------------.           ,--------------------------------------------------.
- * |Version  |  F1  |  F2  |  F3  |  F4  |  F5  |      |           |      |  F6  |  F7  |  F8  |  F9  |  F10 |   F11  |
- * |---------+------+------+------+------+------+------|           |------+------+------+------+------+------+--------|
- * |         |   !  |   @  |   {  |   }  |   |  |      |           |      |   Up |   7  |   8  |   9  |   *  |   F12  |
- * |---------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
- * |         |   #  |   $  |   (  |   )  |   `  |------|           |------| Down |   4  |   5  |   6  |   +  |        |
- * |---------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
- * |         |   %  |   ^  |   [  |   ]  |   ~  |      |           |      |   &  |   1  |   2  |   3  |   \  |        |
- * `---------+------+------+------+------+-------------'           `-------------+------+------+------+------+--------'
- *   | EPRM  |      |      |      |      |                                       |      |    . |   0  |   =  |      |
- *   `-----------------------------------'                                       `----------------------------------'
- *                                        ,-------------.       ,-------------.
- *                                        |Animat|      |       |Toggle|Solid |
- *                                 ,------|------|------|       |------+------+------.
- *                                 |Bright|Bright|      |       |      |Hue-  |Hue+  |
- *                                 |ness- |ness+ |------|       |------|      |      |
- *                                 |      |      |      |       |      |      |      |
- *                                 `--------------------'       `--------------------'
- */
-// SYMBOLS
+),
+
+// TODO: nice place for ~
+#error "define PERMISSIVE_HOLD -- but where?"
+
 [LAYER_SYMB] = KEYMAP(
        // left hand
-       VRSN,   KC_F1,  KC_F2,  KC_F3,  KC_F4,  KC_F5,  KC_TRNS,
-       KC_TRNS,KC_EXLM,KC_AT,  KC_LCBR,KC_RCBR,KC_PIPE,KC_TRNS,
-       KC_TRNS,KC_HASH,KC_DLR, KC_LPRN,KC_RPRN,KC_GRV,
-       KC_TRNS,KC_PERC,KC_CIRC,KC_LBRC,KC_RBRC,KC_TILD,KC_TRNS,
-          EPRM,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,
-                                       RGB_MOD,KC_TRNS,
-                                               KC_TRNS,
-                               RGB_VAD,RGB_VAI,KC_TRNS,
+       VRSN   , KC_F1  , KC_F2    , KC_F3  , KC_F4,   KC_F5,   KC_TRNS,
+       KC_TRNS, KC_EXLM, KC_AT    , KC_LCBR, KC_RCBR, KC_PIPE, KC_TRNS,
+       KC_TRNS, KC_HASH, KC_DOLLAR, KC_LPRN, KC_RPRN, KC_GRV ,
+       KC_TRNS, KC_PERC, KC_CIRC  , KC_LBRC, KC_RBRC, KC_TILD, KC_TRNS,
+       KC_NO  , KC_TRNS, KC_TRNS  , KC_TRNS, KC_TRNS,
+
+                                                      KC_TRNS, KC_TRNS,
+                                                               KC_TRNS,
+                                             KC_TRNS, KC_TRNS, KC_TRNS,
+
        // right hand
        KC_TRNS, KC_F6,   KC_F7,  KC_F8,   KC_F9,   KC_F10,  KC_F11,
        KC_TRNS, KC_UP,   KC_7,   KC_8,    KC_9,    KC_ASTR, KC_F12,
                 KC_DOWN, KC_4,   KC_5,    KC_6,    KC_PLUS, KC_TRNS,
+// TODO: lonely ampersand
        KC_TRNS, KC_AMPR, KC_1,   KC_2,    KC_3,    KC_BSLS, KC_TRNS,
-                         KC_TRNS,KC_DOT,  KC_0,    KC_EQL,  KC_TRNS,
-       RGB_TOG, RGB_SLD,
+                         KC_0,   KC_DOT,  KC_NO,   KC_EQL,  KC_TRNS,
+
+       KC_TRNS, KC_TRNS,
        KC_TRNS,
-       KC_TRNS, RGB_HUD, RGB_HUI
+       KC_TRNS, KC_TRNS, KC_TRNS
 ),
 /* Keymap 2: Media and mouse keys
  *
@@ -178,6 +163,7 @@ const macro_t *action_get_macro(keyrecord_t *record, uint8_t id, uint8_t opt)
     return MACRO_NONE;
 };
 
+// TODO: combos are not a nice solution, because they delay key inputs
 const uint16_t PROGMEM emulation_combo_keys[] = {
   KC_INSERT, KC_DELETE, KC_HOME, KC_END, COMBO_END
 };
@@ -225,6 +211,7 @@ void matrix_init_user(void) {
 
 
 // Runs constantly in the background, in a loop.
+// TODO: doesn't look like a good idea to do it here...
 void matrix_scan_user(void) {
 
     uint8_t layer = biton32(layer_state);
