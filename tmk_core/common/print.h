@@ -40,6 +40,11 @@
 
 #  include "avr/xprintf.h"
 
+// Create user print defines
+#    define uprint(s)          xputs(PSTR(s))
+#    define uprintln(s)        xputs(PSTR(s "\r\n"))
+#    define uprintf(fmt, ...)  __xprintf(PSTR(fmt), ##__VA_ARGS__)
+
 #  ifdef USER_PRINT /* USER_PRINT */
 
 // Remove normal print defines
@@ -48,19 +53,12 @@
 #    undef xprintf
 #    define xprintf(fmt, ...)
 
-// Create user print defines
-#    define uprint(s)          xputs(PSTR(s))
-#    define uprintln(s)        xputs(PSTR(s "\r\n"))
-#    define uprintf(fmt, ...)  __xprintf(PSTR(fmt), ##__VA_ARGS__)
-
 #  else /* NORMAL PRINT */
 
 // Create user & normal print defines
-#    define print(s)           xputs(PSTR(s))
-#    define println(s)         xputs(PSTR(s "\r\n"))
-#    define uprint(s)          print(s)
-#    define uprintln(s)        println(s)
-#    define uprintf(fmt, ...)  xprintf(fmt, ...)
+#    define print(s)           uprint(s)
+#    define println(s)         uprintln(s)
+#    define xprintf(fmt, ...)  uprintf(fmt, ##__VA_ARGS__)
 
 #  endif /* USER_PRINT / NORMAL PRINT */
 
