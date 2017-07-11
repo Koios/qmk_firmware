@@ -6,7 +6,6 @@
 
 #define PERMISSIVE_HOLD 1
 
-#define COMBO_ENABLE 1
 #define COMBO_COUNT 1
 
 
