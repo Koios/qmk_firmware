@@ -200,7 +200,7 @@ static bool process_emulation_exit_combo(keyevent_t* event) {
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   if(biton32(layer_state) == LAYER_PLAIN)
-    if(! process_emulation_exit_combo(record->event))
+    if(! process_emulation_exit_combo(&record->event))
       return false;
 
   switch (keycode) {
