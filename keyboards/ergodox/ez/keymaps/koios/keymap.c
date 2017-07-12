@@ -159,16 +159,20 @@ const macro_t *action_get_macro(keyrecord_t *record, uint8_t id, uint8_t opt)
     return MACRO_NONE;
 };
 
-static void exit_emulation(void) {
-  layer_state = default_layer_state;
-  clear_keyboard();
-}
 
 #define ARRAY_COUNT(ARRAY) (sizeof(ARRAY) / sizeof(ARRAY[0]))
 
 static PROGMEM const keypos_t emulation_exit_combo_keys[] = {
   {.col=1, .row=6}, {3,6}, {1,7}, {3,7}
 };
+
+static int8_t emulation_exit_combo_counter = 0;
+
+static void exit_emulation(void) {
+  layer_state = default_layer_state;
+  clear_keyboard();
+  emulation_exit_combo_counter = 0;
+}
 
 static bool is_emulation_exit_combo_key(keypos_t* pos) {
   for(uint8_t i = 0; i < ARRAY_COUNT(emulation_exit_combo_keys); ++i) {
@@ -179,8 +183,6 @@ static bool is_emulation_exit_combo_key(keypos_t* pos) {
   }
   return false;
 }
-
-static int8_t emulation_exit_combo_counter = 0;
 
 static bool process_emulation_exit_combo(keyevent_t* event) {
   if(is_emulation_exit_combo_key(&event->key)) {
