@@ -13,7 +13,7 @@ enum layer
 };
 
 enum custom_keycodes {
-  PLACEHOLDER = SAFE_RANGE, // can always be here
+  PLACEHOLDER = SAFE_RANGE,
   EPRM,
   VRSN,
   RGB_SLD
@@ -138,7 +138,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 };
 
 const uint16_t PROGMEM fn_actions[] = {
-    [0] = ACTION_LAYER_SET_CLEAR(0),     // reset layers
     [1] = ACTION_LAYER_TAP_TOGGLE(LAYER_SYMB)                // FN1 - Momentary Layer 1 (Symbols)
 };
 
