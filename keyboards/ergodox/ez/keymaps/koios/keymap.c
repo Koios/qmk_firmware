@@ -172,7 +172,7 @@ static PROGMEM const keypos_t emulation_exit_combo_keys[] = {
 
 static bool is_emulation_exit_combo_key(keypos_t* pos) {
   for(uint8_t i = 0; i < ARRAY_COUNT(emulation_exit_combo_keys); ++i) {
-    const keypos_t* cmp = emulation_exit_combo_counter + i;
+    const keypos_t* cmp = emulation_exit_combo_keys + i;
     if(   pgm_read_byte(cmp->col) == pos->col
        && pgm_read_byte(cmp->row) == pos->row)
       return true;
