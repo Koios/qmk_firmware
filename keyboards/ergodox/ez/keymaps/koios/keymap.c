@@ -186,7 +186,7 @@ static bool process_emulation_exit_combo(keyevent_t* event) {
   if(is_emulation_exit_combo_key(&event->key)) {
     if(event->pressed) {
       ++emulation_exit_combo_counter;
-      if(emulation_exit_combo_counter == ARRAY_COUNT(emulation_exit_combo_counter))
+      if(emulation_exit_combo_counter == ARRAY_COUNT(emulation_exit_combo_keys))
         exit_emulation();
     }
     else
