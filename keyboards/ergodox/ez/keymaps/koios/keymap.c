@@ -159,7 +159,7 @@ const macro_t *action_get_macro(keyrecord_t *record, uint8_t id, uint8_t opt)
     return MACRO_NONE;
 };
 
-static void exit_emulation() {
+static void exit_emulation(void) {
   layer_state = default_layer_state;
   clear_keyboard();
 }
@@ -171,7 +171,7 @@ static PROGMEM const keypos_t emulation_exit_combo_keys[] = {
 };
 
 static bool is_emulation_exit_combo_key(keypos_t* pos) {
-  for(uint8_t i = 0; i < ARRAY_COUNT(emulation_exit_combo_counter); ++i) {
+  for(uint8_t i = 0; i < ARRAY_COUNT(emulation_exit_combo_keys); ++i) {
     const keypos_t* cmp = emulation_exit_combo_counter + i;
     if(   pgm_read_byte(cmp->col) == pos->col
        && pgm_read_byte(cmp->row) == pos->row)
@@ -196,7 +196,7 @@ static bool process_emulation_exit_combo(keyevent_t* event) {
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   if(biton32(layer_state) == LAYER_PLAIN)
-    if(! process_emulation_exit_combo(record))
+    if(! process_emulation_exit_combo(record->event))
       return false;
 
   switch (keycode) {
