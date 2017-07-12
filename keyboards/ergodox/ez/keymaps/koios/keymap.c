@@ -186,12 +186,16 @@ static bool process_emulation_exit_combo(keyevent_t* event) {
   if(is_emulation_exit_combo_key(&event->key)) {
     if(event->pressed) {
       ++emulation_exit_combo_counter;
-      if(emulation_exit_combo_counter == ARRAY_COUNT(emulation_exit_combo_keys))
+      if(emulation_exit_combo_counter == ARRAY_COUNT(emulation_exit_combo_keys)) {
         exit_emulation();
+        return false;
+      }
     }
     else
       --emulation_exit_combo_counter;
   }
+
+  return true;
 }
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
