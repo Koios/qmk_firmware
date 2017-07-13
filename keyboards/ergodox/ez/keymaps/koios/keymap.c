@@ -16,7 +16,6 @@ enum custom_keycodes {
   PLACEHOLDER = SAFE_RANGE,
   EPRM,
   VRSN,
-  RGB_SLD
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -138,7 +137,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 };
 
 const uint16_t PROGMEM fn_actions[] = {
-    [1] = ACTION_LAYER_TAP_TOGGLE(LAYER_SYMB)                // FN1 - Momentary Layer 1 (Symbols)
+    [1] = ACTION_LAYER_TAP_TOGGLE(LAYER_SYMB)  // FN1 - Momentary Layer 1 (Symbols)
 };
 
 const macro_t *action_get_macro(keyrecord_t *record, uint8_t id, uint8_t opt)
@@ -201,33 +200,27 @@ static bool process_emulation_exit_combo(keyevent_t* event) {
 }
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-  if(biton32(layer_state) == LAYER_PLAIN)
+  if(biton32(layer_state) == LAYER_PLAIN) {
     if(! process_emulation_exit_combo(&record->event))
       return false;
-
-  switch (keycode) {
-    // dynamically generate these.
-    case EPRM:
-      if (record->event.pressed) {
-        eeconfig_init();
-      }
-      return false;
-      break;
-    case VRSN:
-      if (record->event.pressed) {
-        SEND_STRING (QMK_KEYBOARD "/" QMK_KEYMAP " @ " QMK_VERSION);
-      }
-      return false;
-      break;
-    case RGB_SLD:
-      if (record->event.pressed) {
-        #ifdef RGBLIGHT_ENABLE
-          rgblight_mode(1);
-        #endif
-      }
-      return false;
-      break;
+  }else {
+    switch (keycode) {
+      // dynamically generate these.
+      case EPRM:
+        if (record->event.pressed) {
+          eeconfig_init();
+        }
+        return false;
+        break;
+      case VRSN:
+        if (record->event.pressed) {
+          SEND_STRING (QMK_KEYBOARD "/" QMK_KEYMAP " @ " QMK_VERSION);
+        }
+        return false;
+        break;
+    }
   }
+
   return true;
 }
 
