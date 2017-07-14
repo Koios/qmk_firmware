@@ -35,7 +35,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   // right hand
   KC_RGHT,         KC_6,   KC_7,    KC_8,    KC_9,    KC_0,                   KC_MINS,
-  TG(LAYER_PLAIN), KC_Y,   KC_U,    KC_I,    KC_O,    KC_P,                   KC_BSLS,
+  KC_NO  , KC_Y,   KC_U,    KC_I,    KC_O,    KC_P,                   KC_BSLS,
                    KC_H,   KC_J,    KC_K,    KC_L,    LT(LAYER_MDIA,KC_SCLN), GUI_T(KC_QUOT),
   MEH_T(KC_NO),    KC_N,   KC_M,    KC_COMM, KC_DOT,  RCTL_T(KC_SLSH),        KC_RSFT,
                    KC_UP,  KC_DOWN, KC_LBRC, KC_RBRC, KC_FN1,
@@ -59,12 +59,12 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                              KC_TRNS, KC_TRNS, KC_TRNS,
 
        // right hand
-       KC_TRNS, KC_F6,   KC_F7,  KC_F8,   KC_F9,   KC_F10,  KC_F11,
-       KC_TRNS, KC_UP,   KC_7,   KC_8,    KC_9,    KC_ASTR, KC_F12,
-                KC_DOWN, KC_4,   KC_5,    KC_6,    KC_PLUS, KC_TRNS,
+       KC_TRNS,         KC_F6,   KC_F7,  KC_F8,   KC_F9,   KC_F10,  KC_F11,
+       TG(LAYER_PLAIN), KC_UP,   KC_7,   KC_8,    KC_9,    KC_ASTR, KC_F12,
+                        KC_DOWN, KC_4,   KC_5,    KC_6,    KC_PLUS, KC_TRNS,
 // TODO: lonely ampersand
-       KC_TRNS, KC_AMPR, KC_1,   KC_2,    KC_3,    KC_BSLS, KC_TRNS,
-                         KC_0,   KC_DOT,  KC_NO,   KC_EQL,  KC_TRNS,
+       KC_TRNS,         KC_AMPR, KC_1,   KC_2,    KC_3,    KC_BSLS, KC_TRNS,
+                                 KC_0,   KC_DOT,  KC_NO,   KC_EQL,  KC_TRNS,
 
        KC_TRNS, KC_TRNS,
        KC_TRNS,
@@ -169,6 +169,9 @@ static int8_t emulation_exit_combo_counter = 0;
 
 static void exit_emulation(void) {
   layer_state = default_layer_state;
+  // NOTE: if you can enter the emulation layer from the base layer using one of the keys
+  //       in the emulation exit combo, you might enter the emulation layer immediately
+  //       after leaving it when the keyboard is cleared on exit. BEWARE!
   clear_keyboard();
   emulation_exit_combo_counter = 0;
 }
@@ -176,8 +179,8 @@ static void exit_emulation(void) {
 static bool is_emulation_exit_combo_key(keypos_t* pos) {
   for(uint8_t i = 0; i < ARRAY_COUNT(emulation_exit_combo_keys); ++i) {
     const keypos_t* cmp = emulation_exit_combo_keys + i;
-    if(   pgm_read_byte(cmp->col) == pos->col
-       && pgm_read_byte(cmp->row) == pos->row)
+    if(   pgm_read_byte(&cmp->col) == pos->col
+       && pgm_read_byte(&cmp->row) == pos->row)
       return true;
   }
   return false;
@@ -192,8 +195,9 @@ static bool process_emulation_exit_combo(keyevent_t* event) {
         return false;
       }
     }
-    else
+    else {
       --emulation_exit_combo_counter;
+    }
   }
 
   return true;
@@ -201,8 +205,9 @@ static bool process_emulation_exit_combo(keyevent_t* event) {
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   if(biton32(layer_state) == LAYER_PLAIN) {
-    if(! process_emulation_exit_combo(&record->event))
-      return false;
+    // the return value is ignored because the plain layer must deliver each key press
+    // immediately to the host
+    process_emulation_exit_combo(&record->event);
   }else {
     switch (keycode) {
       // dynamically generate these.
@@ -240,6 +245,7 @@ void matrix_scan_user(void) {
     ergodox_right_led_1_off();
     ergodox_right_led_2_off();
     ergodox_right_led_3_off();
+
     switch (layer) {
       // TODO: Make this relevant to the ErgoDox EZ.
         case LAYER_SYMB:
