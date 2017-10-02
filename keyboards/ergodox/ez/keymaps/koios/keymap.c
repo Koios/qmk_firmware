@@ -256,10 +256,13 @@ void matrix_scan_user(void) {
             break;
         case LAYER_PLAIN:
             ergodox_right_led_3_on();
+            if(emulation_exit_combo_counter % 2)
+              ergodox_right_led_1_on();
+            if(emulation_exit_combo_counter / 2)
+              ergodox_right_led_2_on();
             break;
         default:
             // none
             break;
     }
-
 };
